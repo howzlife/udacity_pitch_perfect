@@ -20,12 +20,14 @@ class PlaySoundsViewController: UIViewController {
     @IBOutlet weak var snailButton: UIButton!
     @IBOutlet weak var vaderButton: UIButton!
     @IBOutlet weak var reverbButton: UIButton!
+    @IBOutlet weak var echoButton: UIButton!
+
     @IBOutlet weak var stopButton: UIButton!
     
     var recordedAudioURL: NSURL!
     var stopTimer: Timer!
     
-    enum ButtonType: Int{ case Slow = 0, Fast, Chipmunk, Vader, Reverb }
+    enum ButtonType: Int{ case Slow = 0, Fast, Chipmunk, Vader, Reverb, Echo }
     
     @IBAction func playSoundForButton(sender: UIButton) {
         switch (ButtonType(rawValue: sender.tag)!) {
@@ -39,6 +41,8 @@ class PlaySoundsViewController: UIViewController {
             playSound(pitch: -1000)
         case .Reverb:
             playSound(reverb: true)
+        case .Echo:
+            playSound(echo: true)
         }
     }
     
