@@ -18,33 +18,31 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     
     let startRecording = UIImage(named: "Record Button")
     let stopRecording = UIImage(named: "Stop Recording Button")
+    let startedRecordingText: String = "Started Recording"
+    let stoppedRecordingText: String = "Stopped Recording"
+    let recordLabelText: String = "Tap to Record"
+    let stopLabelText: String = "Stop Recording"
     var isRecording: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         isRecording = false
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     @IBAction func recordAudio() {
-        if isRecording {
-            stopRecordingAudio()
-            print("Stopped Recording")
-            recorderButton.setImage(startRecording, for: UIControlState.normal)
-            recordLabel.text = "Tap To Record"
-            isRecording = !isRecording
-        } else {
-            startRecordingAudio()
-            recorderButton.setImage(stopRecording, for: UIControlState.normal)
-            recordLabel.text = "Stop Recording"
-            print("Is Recording")
-            isRecording = !isRecording
-        }
+        isRecording
+            ? recordAudio(record: true, output: stoppedRecordingText,
+                                  image: startRecording!, labelText: recordLabelText)
+            : recordAudio(record: false, output: startedRecordingText,
+                        image: stopRecording!, labelText: stopLabelText)
+    }
+    
+    private func recordAudio(record: Bool, output: String, image: UIImage, labelText: String) {
+        isRecording ? stopRecordingAudio() : startRecordingAudio()
+        print(output)
+        recorderButton.setImage(image, for: UIControlState.normal)
+        recordLabel.text = labelText
+        isRecording = !isRecording
     }
     
     private func startRecordingAudio () {
@@ -74,6 +72,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
             self.performSegue(withIdentifier: "modifyRecording", sender: audioRecorder.url)
             print("Finished recording successfully")
         } else {
+            let alertController = UIAlertController(title: "Error", message: "Failed to record, please try again", preferredStyle: UIAlertControllerStyle.alert)
+            self.present(alertController, animated: true)
             print("Failed to record")
         }
     }
